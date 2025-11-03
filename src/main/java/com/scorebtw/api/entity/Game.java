@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -75,7 +76,8 @@ public class Game {
             return 0.0;
         }
         return reviews.stream()
-                .mapToDouble(Review::getRating)
+                .map(Review::getRating)
+                .mapToDouble(BigDecimal::doubleValue)
                 .average()
                 .orElse(0.0);
     }
