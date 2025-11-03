@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#IGNORE env
+env.properties
