@@ -63,7 +63,8 @@ public class AuthService {
                 savedUser.getId(),
                 savedUser.getUsername(),
                 savedUser.getEmail(),
-                savedUser.getRoles()
+                savedUser.getRoles(),
+                null
         );
 
         return new AuthDTO.AuthResponse(token, userDTO);
@@ -86,7 +87,8 @@ public class AuthService {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRoles()
+                user.getRoles(),
+                null
         );
 
         return new AuthDTO.AuthResponse(token, userDTO);

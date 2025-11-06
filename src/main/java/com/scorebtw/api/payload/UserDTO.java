@@ -6,7 +6,8 @@ public record UserDTO(
         Long id,
         String username,
         String email,
-        Set<String> roles
+        Set<String> roles,
+        ProfileDTO profile
 ) {
 }
 
