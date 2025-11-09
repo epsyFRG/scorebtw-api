@@ -1,4 +1,4 @@
-package com.scorebtw.api.dto;
+package com.scorebtw.api.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

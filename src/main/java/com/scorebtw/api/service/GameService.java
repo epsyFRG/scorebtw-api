@@ -1,9 +1,9 @@
 package com.scorebtw.api.service;
 
-import com.scorebtw.api.dto.RawgDTO;
 import com.scorebtw.api.entity.Game;
 import com.scorebtw.api.entity.Genre;
 import com.scorebtw.api.entity.Platform;
+import com.scorebtw.api.payload.RawgDTO;
 import com.scorebtw.api.repository.GameRepository;
 import com.scorebtw.api.repository.GenreRepository;
 import com.scorebtw.api.repository.PlatformRepository;

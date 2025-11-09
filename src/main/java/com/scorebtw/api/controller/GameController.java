@@ -1,7 +1,7 @@
 package com.scorebtw.api.controller;
 
-import com.scorebtw.api.dto.RawgDTO;
 import com.scorebtw.api.entity.Game;
+import com.scorebtw.api.payload.RawgDTO;
 import com.scorebtw.api.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
 
     private final GameService gameService;
-    
+
     @GetMapping("/search")
     public ResponseEntity<RawgDTO.GameSearchResponse> searchGames(
             @RequestParam String q,

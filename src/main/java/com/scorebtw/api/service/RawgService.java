@@ -1,6 +1,6 @@
 package com.scorebtw.api.service;
 
-import com.scorebtw.api.dto.RawgDTO;
+import com.scorebtw.api.payload.RawgDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
