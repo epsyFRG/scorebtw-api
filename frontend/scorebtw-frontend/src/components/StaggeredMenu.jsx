@@ -1,4 +1,10 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from "react"
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react"
 import { Link } from "react-router-dom"
 import { gsap } from "gsap"
 import "./StaggeredMenu.css"
@@ -359,7 +365,7 @@ export const StaggeredMenu = ({
   ])
 
   // Chiudi il menu quando si clicca fuori
-  React.useEffect(() => {
+  useEffect(() => {
     // Se il menu non è aperto, non aggiungere il listener
     if (!open) return
 
