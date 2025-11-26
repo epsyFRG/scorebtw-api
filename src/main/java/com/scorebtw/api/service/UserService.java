@@ -14,6 +14,9 @@ import com.scorebtw.api.repository.UserRepository;
 import com.scorebtw.api.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +81,22 @@ public class UserService {
         return mapToProfileResponse(updatedProfile);
     }
 
+    public List<UserDTO> searchUsers(String query, Integer page, Integer pageSize) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
+        int pageNumber = page != null && page > 0 ? page - 1 : 0;
+        int size = pageSize != null && pageSize > 0 ? pageSize : 20;
+        Pageable pageable = PageRequest.of(pageNumber, size);
+
+        Page<User> usersPage = userRepository.findByUsernameContainingIgnoreCase(query.trim(), pageable);
+        
+        return usersPage.getContent().stream()
+                .map(this::mapToUserDTO)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public String uploadAvatar(MultipartFile file) throws IOException {
         User currentUser = getCurrentUser();
@@ -114,11 +135,6 @@ public class UserService {
     }
 
     private UserDTO mapToUserDTO(User user) {
-        ProfileDTO.ProfileResponse profileDTO = null;
-        if (user.getProfile() != null) {
-            profileDTO = mapToProfileResponse(user.getProfile());
-        }
-
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
@@ -153,7 +169,8 @@ public class UserService {
                 favoriteGameDTO,
                 followersCount,
                 followingCount,
-                reviewsCount
+                reviewsCount,
+                profile.getUser().getUsername()
         );
     }
 }

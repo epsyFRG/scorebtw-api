@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -43,8 +42,9 @@ public class Game {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
+    // RIMOSSO @UpdateTimestamp - causava conflitti di transazione
+    // Il campo viene gestito manualmente quando necessario
+    @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
     // Relazione Many-to-Many con Genre
@@ -65,13 +65,15 @@ public class Game {
     )
     private Set<Platform> platforms = new HashSet<>();
 
-    // Relazione One-to-Many con Review
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Review> reviews = new HashSet<>();
-
+    // Relazione One-to-Many con Review - RIMOSSA COMPLETAMENTE
+    // Questa relazione causava conflitti di transazione perché Hibernate tentava di
+    // aggiornare automaticamente il Game quando veniva inserita una Review.
+    // La relazione esiste solo nel database (foreign key) ma non come JPA relationship.
+    // Per ottenere le reviews di un Game, usare ReviewRepository.findByGameId()
+    
     // Utility method per calcolare la media dei rating
-    @Transient
-    public Double getAverageRating() {
+    // Questa deve essere chiamata passando le reviews come parametro o usando il repository
+    public static Double calculateAverageRating(java.util.Collection<Review> reviews) {
         if (reviews == null || reviews.isEmpty()) {
             return 0.0;
         }

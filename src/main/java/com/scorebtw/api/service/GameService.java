@@ -10,6 +10,7 @@ import com.scorebtw.api.repository.PlatformRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
@@ -31,7 +32,7 @@ public class GameService {
         return rawgService.searchGames(query, page, pageSize);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public Game getOrImportGame(Long rawgGameId) {
         Optional<Game> existingGame = gameRepository.findById(rawgGameId);
 
@@ -46,7 +47,21 @@ public class GameService {
         return importGameFromRawg(rawgGame);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void ensureGameExists(Long rawgGameId) {
+        // Only check if game exists without loading it
+        if (gameRepository.existsById(rawgGameId)) {
+            log.info("Game already exists in local DB: {}", rawgGameId);
+            return; // Game exists, nothing to do
+        }
+
+        log.info("Importing game from RAWG: {}", rawgGameId);
+        RawgDTO.GameDetail rawgGame = rawgService.getGameDetails(rawgGameId);
+        importGameFromRawg(rawgGame);
+        log.info("Game imported successfully: {}", rawgGameId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Game importGameFromRawg(RawgDTO.GameDetail rawgGame) {
         Game game = new Game();
         game.setId(rawgGame.getId());

@@ -21,8 +21,32 @@ public class ReviewController {
     public ResponseEntity<ReviewDTO.ReviewResponse> createReview(
             @Valid @RequestBody ReviewDTO.ReviewRequest request
     ) {
-        ReviewDTO.ReviewResponse response = reviewService.createReview(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        System.out.println("ReviewController - Received createReview request:");
+        System.out.println("  gameId: " + request.gameId());
+        System.out.println("  rating: " + request.rating());
+        System.out.println("  title: " + request.title());
+        System.out.println("  content length: " + (request.content() != null ? request.content().length() : 0));
+        
+        // Check authentication before calling service
+        org.springframework.security.core.Authentication auth = 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("ReviewController - SecurityContext authentication: " + (auth != null ? "PRESENT" : "NULL"));
+        if (auth != null) {
+            System.out.println("ReviewController - Authentication name: " + auth.getName());
+            System.out.println("ReviewController - Authentication principal class: " + auth.getPrincipal().getClass().getName());
+            System.out.println("ReviewController - Is authenticated: " + auth.isAuthenticated());
+        }
+        
+        try {
+            ReviewDTO.ReviewResponse response = reviewService.createReview(request);
+            System.out.println("ReviewController - Review created successfully with ID: " + response.id());
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            System.err.println("ReviewController - Error creating review: " + e.getMessage());
+            System.err.println("ReviewController - Error class: " + e.getClass().getName());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @PutMapping("/{id}")

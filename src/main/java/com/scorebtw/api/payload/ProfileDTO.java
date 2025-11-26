@@ -12,7 +12,8 @@ public class ProfileDTO {
             GameSimpleDTO favoriteGame,
             Integer followersCount,
             Integer followingCount,
-            Integer reviewsCount
+            Integer reviewsCount,
+            String username
     ) {
     }
 

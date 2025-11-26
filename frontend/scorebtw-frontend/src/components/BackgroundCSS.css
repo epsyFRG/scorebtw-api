@@ -1,0 +1,22 @@
+.light-rays-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.light-rays-container.app-background,
+.light-rays-container.custom-rays {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+.light-rays-container.custom-rays {
+  opacity: 0.9;
+  filter: drop-shadow(0 0 40px rgba(0, 170, 255, 0.35));
+}

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,7 +48,23 @@ public class UserController {
     public ResponseEntity<Map<String, String>> uploadAvatar(
             @RequestParam("file") MultipartFile file
     ) throws IOException {
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", "File is required"));
+        }
+        
         String avatarUrl = userService.uploadAvatar(file);
         return ResponseEntity.ok(Map.of("avatarUrl", avatarUrl));
+    }
+
+    // Cerca utenti per username //
+    @GetMapping("/search")
+    public ResponseEntity<List<UserDTO>> searchUsers(
+            @RequestParam String q,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer pageSize
+    ) {
+        List<UserDTO> users = userService.searchUsers(q, page, pageSize);
+        return ResponseEntity.ok(users);
     }
 }
