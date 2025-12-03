@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: scorebtw-api
+    runtime: java
+    plan: free
+    buildCommand: chmod +x ./mvnw && ./mvnw clean package -DskipTests
+    startCommand: java -jar target/scorebtw-api-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_USERNAME
+        sync: false
+      - key: DATABASE_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_NAME
+        sync: false
+      - key: CLOUDINARY_KEY
+        sync: false
+      - key: CLOUDINARY_SECRET
+        sync: false
+      - key: MAILGUN_API
+        sync: false
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_ADDRESS
+        sync: false
+      - key: RAWG_API_KEY
+        sync: false
+      - key: SHOW_SQL
+        value: "false"
+      - key: FORMAT_SQL
+        value: "false"
+
+databases:
+  - name: scorebtw_db
+    databaseName: scorebtw
+    user: scorebtw_user
+    plan: free

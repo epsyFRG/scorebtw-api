@@ -97,11 +97,20 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Origini consentite
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-                "http://localhost:*",
-                "http://127.0.0.1:*"
-        ));
+        // Origini consentite (locale + Netlify + Render se configurato)
+        String allowedOrigins = System.getenv("ALLOWED_ORIGINS");
+        if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
+            // Se ALLOWED_ORIGINS è impostata, usa quella (formato: "url1,url2,url3")
+            configuration.setAllowedOriginPatterns(Arrays.asList(allowedOrigins.split(",")));
+        } else {
+            // Default: localhost per sviluppo + pattern per Netlify
+            configuration.setAllowedOriginPatterns(Arrays.asList(
+                    "http://localhost:*",
+                    "http://127.0.0.1:*",
+                    "https://*.netlify.app",
+                    "https://*.netlify.app/*"
+            ));
+        }
 
         // Metodi HTTP consentiti
         configuration.setAllowedMethods(Arrays.asList(
